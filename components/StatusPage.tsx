@@ -124,22 +124,28 @@ const StatusPage = () => {
             ))}
           </Row>
           <Spacer y={1} />
-          <Row css={{ justifyContent: "center", alignItems: "center" }}>
-            <Text b>CPU:</Text>
-            <Badge color="primary" css={{ ml: "$2" }}>
-              {serverInfo.cpu?.cores || "N/A"}x {serverInfo.cpu?.model || "N/A"}
-            </Badge>
-          </Row>
-          <Spacer y={1} />
-          {serverInfo.gpu && (
-            <Row css={{ justifyContent: "center", alignItems: "center" }}>
-              <Text b>GPU:</Text>
-              <Badge color="primary" css={{ ml: "$2" }}>
-                {serverInfo.gpu}
-              </Badge>
-            </Row>
+          {serverInfo.cpu?.model && serverInfo.cpu?.model !== "Unknown" && serverInfo.cpu?.model !== "N/A" && (
+            <>
+              <Row css={{ justifyContent: "center", alignItems: "center" }}>
+                <Text b>CPU:</Text>
+                <Badge color="primary" css={{ ml: "$2" }}>
+                  {serverInfo.cpu?.cores || "N/A"}x {serverInfo.cpu?.model || "N/A"}
+                </Badge>
+              </Row>
+              <Spacer y={1} />
+            </>
           )}
-          <Spacer y={1} />
+          {serverInfo.gpu && serverInfo.gpu !== "Unknown" && serverInfo.gpu !== "N/A" && (
+            <>
+              <Row css={{ justifyContent: "center", alignItems: "center" }}>
+                <Text b>GPU:</Text>
+                <Badge color="primary" css={{ ml: "$2" }}>
+                  {serverInfo.gpu}
+                </Badge>
+              </Row>
+              <Spacer y={1} />
+            </>
+          )}
           <Row css={{ justifyContent: "center", alignItems: "center" }}>
             <Text b>Uptime:</Text>
             <Badge color="primary" css={{ ml: "$2" }}>
