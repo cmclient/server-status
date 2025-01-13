@@ -14,6 +14,21 @@
             "service": "OpenDNS",
             "ip": "208.67.222.222",
             "port": 53
+        },
+        {
+            "service": "OVH Warsaw",
+            "ip": "57.128.213.151",
+            "port": 22
+        },
+        {
+            "service": "OVH Calais",
+            "ip": "141.95.202.239",
+            "port": 22
+        },
+        {
+            "service": "Oracle Amsterdam",
+            "ip": "158.101.208.201",
+            "port": 22
         }
     ]
 }

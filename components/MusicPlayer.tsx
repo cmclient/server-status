@@ -4,7 +4,7 @@ import { Icon } from "@iconify/react";
 
 const MusicPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [audio, setAudio] = useState<Audio | null>(null);
+  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
 
@@ -95,7 +95,7 @@ const MusicPlayer = () => {
 
   const handleProgressClick = (e: React.MouseEvent) => {
     if (audio) {
-      const progressBar = e.currentTarget;
+      const progressBar = e.currentTarget as HTMLDivElement;
       const clickPosition = e.nativeEvent.offsetX / progressBar.offsetWidth;
       audio.currentTime = clickPosition * duration;
     }

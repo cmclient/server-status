@@ -75,7 +75,8 @@ const HomePage = ({ toggleTheme }) => {
       <Particles
         id="tsparticles"
         init={particlesInit}
-        options={particlesOptions}
+        // @ts-ignore
+        options={particlesOptions} 
         style={{
           position: "absolute",
           zIndex: 0,
