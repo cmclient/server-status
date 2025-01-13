@@ -69,7 +69,7 @@ const StatusPage = () => {
 
   return (
     <>
-      <Card css={{ p: "$6", mb: "$8", maxWidth: "75%", margin: "auto", zIndex: 1 }}>
+      <Card className="services">
         <Card.Header css={{ justifyContent: "center" }}>
           <Text h3>Service Status</Text>
         </Card.Header>
@@ -110,7 +110,7 @@ const StatusPage = () => {
 
       <Spacer y={2} />
 
-      <Card css={{ p: "$6", maxWidth: "35%", margin: "auto", zIndex: 1 }}>
+      <Card className="serverInfo">
         <Card.Header css={{ justifyContent: "center" }}>
           <Text h3>Server Information</Text>
         </Card.Header>

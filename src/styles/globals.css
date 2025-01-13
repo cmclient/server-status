@@ -17,3 +17,23 @@ body {
   min-height: 100vh;
 }
 
+.services {
+  padding: 24px;
+  margin-bottom: 32px;
+  max-width: 75%;
+  margin: auto;
+  z-index: 1;
+}
+
+.serverInfo {
+  padding: 24px;
+  margin: auto;
+  z-index: 1;
+  max-width: 75%;
+}
+
+@media (min-width: 768px) {
+  .serverInfo {
+    max-width: 35%;
+  }
+}
