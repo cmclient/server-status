@@ -17,22 +17,31 @@ let cachedData: { services: ServiceStatus[] } = {
 
 const getServiceStatus = async () => {
   const servicesStatus = await Promise.all(
-    config.services.map(async (service: { ip: any; port: any; service: any; }) => {
+    config.services.map(async (service: { ip: any; port?: any; service: any; }) => {
       try {
-        const res = await ping.promise.probe(service.ip, {
-          port: service.port,
-          timeout: 1,
-        });
+        let res;
+
+        if (service.port && service.port != -1) {
+          res = await ping.promise.probe(service.ip, {
+            port: service.port,
+            timeout: 1,
+          });
+        } else {
+          res = await ping.promise.probe(service.ip, {
+            timeout: 1,
+          });
+        }
+
         return {
           service: service.service,
-          port: service.port,
+          port: service.port || 'ICMP',
           status: res.alive ? 'Online' : 'Offline',
           ping: res.alive ? res.time : -1,
         };
       } catch (error) {
         return {
           service: service.service,
-          port: service.port,
+          port: service.port || 'N/A',
           status: 'Offline',
           ping: -1,
         };
