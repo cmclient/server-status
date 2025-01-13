@@ -102,20 +102,7 @@ const MusicPlayer = () => {
   };
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        bottom: "20px",
-        right: "20px",
-        width: "400px",
-        backgroundColor: "rgba(0, 0, 0, 0.7)",
-        padding: "10px",
-        borderRadius: "10px",
-        zIndex: 10,
-        display: "flex",
-        alignItems: "center",
-      }}
-    >
+    <div className="music-player">
       <img
         src={songImage}
         alt="Song Cover"
