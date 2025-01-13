@@ -70,28 +70,28 @@ const StatusPage = () => {
   return (
     <>
       <Card css={{ p: "$6", mb: "$8", maxWidth: "75%", margin: "auto", zIndex: 1 }}>
-        <Card.Header>
+      <Card.Header css={{ justifyContent: "center" }}>
           <Text h3>Service Status</Text>
         </Card.Header>
         <Card.Body>
           <Table aria-label="Service Status Table" css={{ height: "auto", minWidth: "100%" }}>
-            <Table.Header>
-              <Table.Column>Service</Table.Column>
-              <Table.Column>Port</Table.Column>
-              <Table.Column>Status</Table.Column>
-              <Table.Column>Ping</Table.Column>
+            <Table.Header css={{ textAlign: "center" }}>
+              <Table.Column css={{ textAlign: "center", padding: "$4" }}>Service</Table.Column>
+              <Table.Column css={{ textAlign: "center", padding: "$4" }}>Port</Table.Column>
+              <Table.Column css={{ textAlign: "center", padding: "$4" }}>Status</Table.Column>
+              <Table.Column css={{ textAlign: "center", padding: "$4" }}>Ping</Table.Column>
             </Table.Header>
             <Table.Body>
               {services.map((service, idx) => (
-                <Table.Row key={idx}>
-                  <Table.Cell>{service.service}</Table.Cell>
-                  <Table.Cell>{service.port}</Table.Cell>
-                  <Table.Cell>
+                <Table.Row key={idx} css={{ paddingBottom: "$4", paddingTop: "$4" }}>
+                  <Table.Cell css={{ textAlign: "center", padding: "$4" }}>{service.service}</Table.Cell>
+                  <Table.Cell css={{ textAlign: "center", padding: "$4" }}>{service.port}</Table.Cell>
+                  <Table.Cell css={{ textAlign: "center", padding: "$4" }}>
                     <Badge color={service.status === "Online" ? "success" : "error"}>
                       {service.status}
                     </Badge>
                   </Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell css={{ textAlign: "center", padding: "$4" }}>
                     {service.ping === -1 ? (
                       <Badge color="error">Offline</Badge>
                     ) : (
@@ -126,7 +126,7 @@ const StatusPage = () => {
           <Row css={{ justifyContent: "center", alignItems: "center" }}>
             <Text b>CPU:</Text>
             <Badge color="primary" css={{ ml: "$2" }}>
-            {serverInfo.cpu?.cores || "N/A"}x {serverInfo.cpu?.model || "N/A"}
+              {serverInfo.cpu?.cores || "N/A"}x {serverInfo.cpu?.model || "N/A"}
             </Badge>
           </Row>
           <Spacer y={1} />
