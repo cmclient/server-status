@@ -75,6 +75,7 @@ const StatusPage = () => {
         </Card.Header>
         <Card.Body>
           <Table aria-label="Service Status Table" css={{ height: "auto", minWidth: "100%" }}>
+            {/* @ts-ignore */}
             <Table.Header css={{ textAlign: "center" }}>
               <Table.Column css={{ textAlign: "center", padding: "$4" }}>Service</Table.Column>
               <Table.Column css={{ textAlign: "center", padding: "$4" }}>Port</Table.Column>
