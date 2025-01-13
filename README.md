@@ -19,7 +19,7 @@ A server monitoring dashboard built with Next.js and NextUI.
 1. Clone the repository:
 
    ```
-   git clone <repository_url>
+   git clone https://github.com/cmclient/server-status
    ```
 
 2. Install dependencies:
@@ -36,31 +36,10 @@ A server monitoring dashboard built with Next.js and NextUI.
 
    Visit `http://localhost:3000` in your browser.
 
-## Project Structure
-
-- **Frontend**: Built using Next.js with NextUI for UI components.
-  - **components**: Contains UI components like `StatusPage.tsx`, `MusicPlayer.tsx`, etc.
-  - **layouts**: Contains layout files like `Layout.tsx`.
-  - **public**: Static assets such as `favicon.ico`.
-  - **styles**: Global CSS files.
-
-- **Backend**: The backend is a Next.js API that provides server stats and service statuses.
-  - **/api/server-info.ts**: Returns server performance data (CPU, RAM, disk usage, etc.).
-  - **/api/services.ts**: Checks the status (Online/Offline) of predefined services.
-
 ## Configuration
 
 - **config.json**: Modify this file to define the services to monitor and their respective IPs and ports.
 
-## Notes
-
-- The frontend fetches real-time data from the backend APIs (`/api/server-info` and `/api/services`).
-- The backend uses various system libraries to collect data about the server's resources and services.
-
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-Let me know if you'd like to add more details!

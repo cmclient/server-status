@@ -4,13 +4,20 @@ import fs from 'fs';
 
 const config = JSON.parse(fs.readFileSync('config.json', 'utf-8'));
 
-let cachedData = {
+interface ServiceStatus {
+  service: string;
+  port: number;
+  status: string;
+  ping: number;
+}
+
+let cachedData: { services: ServiceStatus[] } = {
   services: [],
 };
 
 const getServiceStatus = async () => {
   const servicesStatus = await Promise.all(
-    config.services.map(async (service) => {
+    config.services.map(async (service: { ip: any; port: any; service: any; }) => {
       try {
         const res = await ping.promise.probe(service.ip, {
           port: service.port,
@@ -35,9 +42,17 @@ const getServiceStatus = async () => {
   cachedData.services = servicesStatus;
 };
 
+getServiceStatus();
+
+setInterval(async () => {
+  await getServiceStatus();
+}, 5000);
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (!cachedData.services.length) {
-    await getServiceStatus(); // Fetch services if not already cached
+  const { ignoreCache } = req.query;
+
+  if (ignoreCache === 'true' || !cachedData.services.length) {
+    await getServiceStatus();
   }
 
   res.status(200).json(cachedData.services);
