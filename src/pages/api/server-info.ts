@@ -89,7 +89,7 @@ fetchInitialCpuGpuInfo();
 
 setInterval(async () => {
     await getServerInfo();
-}, 5000);
+}, 10000);
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { ignoreCache } = req.query;

@@ -46,7 +46,7 @@ getServiceStatus();
 
 setInterval(async () => {
   await getServiceStatus();
-}, 5000);
+}, 10000);
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { ignoreCache } = req.query;
