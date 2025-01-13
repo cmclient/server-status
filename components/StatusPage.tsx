@@ -70,7 +70,7 @@ const StatusPage = () => {
   return (
     <>
       <Card css={{ p: "$6", mb: "$8", maxWidth: "75%", margin: "auto", zIndex: 1 }}>
-      <Card.Header css={{ justifyContent: "center" }}>
+        <Card.Header css={{ justifyContent: "center" }}>
           <Text h3>Service Status</Text>
         </Card.Header>
         <Card.Body>
@@ -131,12 +131,14 @@ const StatusPage = () => {
             </Badge>
           </Row>
           <Spacer y={1} />
-          <Row css={{ justifyContent: "center", alignItems: "center" }}>
-            <Text b>GPU:</Text>
-            <Badge color="primary" css={{ ml: "$2" }}>
-              {serverInfo.gpu || "N/A"}
-            </Badge>
-          </Row>
+          {serverInfo.gpu && (
+            <Row css={{ justifyContent: "center", alignItems: "center" }}>
+              <Text b>GPU:</Text>
+              <Badge color="primary" css={{ ml: "$2" }}>
+                {serverInfo.gpu}
+              </Badge>
+            </Row>
+          )}
           <Spacer y={1} />
           <Row css={{ justifyContent: "center", alignItems: "center" }}>
             <Text b>Uptime:</Text>
