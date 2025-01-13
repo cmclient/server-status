@@ -47,7 +47,7 @@ const getServerInfo = async () => {
         let averageLoad;
         if (osInfo.platform === 'Windows' || osInfo.platform === 'win32') {
             const usage = await osu.cpu.usage();
-            averageLoad = { '1m': usage, '5m': usage, '15m': usage };
+            averageLoad = { 'now': usage };
         } else {
             const load = os.loadavg();
             if (load && load.length >= 3) {
