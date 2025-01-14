@@ -14,6 +14,30 @@ let cachedData = {
     serverInfo: {},
 };
 
+const formatUptime = (uptimeInSeconds: number): string => {
+    const units = [
+        { label: 'year', seconds: 365 * 24 * 3600 },
+        { label: 'month', seconds: 30 * 24 * 3600 },
+        { label: 'day', seconds: 24 * 3600 },
+        { label: 'hour', seconds: 3600 },
+        { label: 'minute', seconds: 60 },
+        { label: 'second', seconds: 1 },
+    ];
+
+    const result: string[] = [];
+    let remaining = uptimeInSeconds;
+
+    for (const { label, seconds } of units) {
+        const count = Math.floor(remaining / seconds);
+        if (count > 0) {
+            result.push(`${count} ${label}${count > 1 ? 's' : ''}`);
+            remaining %= seconds;
+        }
+    }
+
+    return result.join(', ');
+};
+
 const fetchInitialCpuGpuInfo = async () => {
     try {
         const cpu = await si.cpu();
@@ -63,7 +87,7 @@ const getServerInfo = async () => {
 
         cachedData.serverInfo = {
             averageLoad,
-            uptime: `${Math.floor(uptime / 3600)} hours, ${Math.floor((uptime % 3600) / 60)} minutes`,
+            uptime: formatUptime(uptime),
             hostname: cachedCpuGpuInfo.hostname,
             os: osInfo.distro ?? 'Unknown',
             cpu: {
