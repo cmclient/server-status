@@ -15,10 +15,10 @@ const HomePage = ({ toggleTheme }) => {
   const particlesOptions = {
     particles: {
       number: {
-        value: 150,
+        value: 50,
       },
       size: {
-        value: 3,
+        value: 2,
         animation: {
           enable: true,
           speed: 5,
@@ -67,7 +67,7 @@ const HomePage = ({ toggleTheme }) => {
         },
       },
     },
-    fpsLimit: 144,
+    fpsLimit: 120,
   };
 
   return (

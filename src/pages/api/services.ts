@@ -36,7 +36,7 @@ const getServiceStatus = async () => {
           service: service.service,
           port: service.port || 'ICMP',
           status: res.alive ? 'Online' : 'Offline',
-          ping: res.alive ? res.time : -1,
+          ping: res.alive ? Math.round(res.time) : -1,
         };
       } catch (error) {
         return {
