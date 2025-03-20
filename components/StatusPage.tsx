@@ -163,7 +163,7 @@ const StatusPage = () => {
           <Row css={{ justifyContent: "center", alignItems: "center" }}>
             <Text b>System:</Text>
             <Badge color="primary" css={{ ml: "$2" }}>
-              {serverInfo.os}
+              {serverInfo.os} {serverInfo.arch}
             </Badge>
           </Row>
           <Spacer y={1} />

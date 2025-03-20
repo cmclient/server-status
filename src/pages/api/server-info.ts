@@ -3,6 +3,27 @@ import si from 'systeminformation';
 import os from 'os';
 import osu from 'node-os-utils';
 
+interface ServerInfo {
+    os: string;
+    arch: string;
+    hostname: string;
+    averageLoad: any;
+    uptime: string;
+    cpu: {
+        model: string;
+        cores: number;
+    };
+    gpu: string;
+    disk: {
+        total: number;
+        used: number;
+    };
+    ram: {
+        total: number;
+        used: number;
+    };
+}
+
 let cachedCpuGpuInfo = {
     cpu: "Unknown",
     gpu: "Unknown",
@@ -10,8 +31,18 @@ let cachedCpuGpuInfo = {
     cpuCores: 0,
 };
 
-let cachedData = {
+let cachedData: { serverInfo: ServerInfo | {} } = {
     serverInfo: {},
+};
+
+// Subtract 1ms from ping on macOS ARM64 (Apple Silicon) due to increased latency 
+// from the Apple LAN chip used in Mac Mini. This normalizes results to be
+// comparable with Intel-based PCs.
+export const adjustPing = (ping: number): number => {
+    if (cachedData.serverInfo && (cachedData.serverInfo as ServerInfo).os === 'macOS' && (cachedData.serverInfo as ServerInfo).arch === 'arm64') {
+        return Math.max(0, ping - 1);
+    }
+    return ping;
 };
 
 const formatUptime = (uptimeInSeconds: number): string => {
@@ -90,6 +121,7 @@ const getServerInfo = async () => {
             uptime: formatUptime(uptime),
             hostname: cachedCpuGpuInfo.hostname,
             os: osInfo.distro ?? 'Unknown',
+            arch: osInfo.arch ?? 'Unknown',
             cpu: {
                 model: cachedCpuGpuInfo.cpu,
                 cores: cachedCpuGpuInfo.cpuCores,

@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import ping from 'ping';
 import fs from 'fs';
+import { adjustPing } from './server-info.ts';
 
 const config = JSON.parse(fs.readFileSync('config.json', 'utf-8'));
 
@@ -36,7 +37,7 @@ const getServiceStatus = async () => {
           service: service.service,
           port: service.port || 'ICMP',
           status: res.alive ? 'Online' : 'Offline',
-          ping: res.alive ? Math.round(res.time) : -1,
+          ping: res.alive ? adjustPing(Math.round(res.time)) : -1,
         };
       } catch (error) {
         return {
