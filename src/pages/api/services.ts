@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import ping from 'ping';
 import fs from 'fs';
-import { adjustPing } from './server-info.ts';
+import { adjustPing } from './server-info';
 
 const config = JSON.parse(fs.readFileSync('config.json', 'utf-8'));
 
