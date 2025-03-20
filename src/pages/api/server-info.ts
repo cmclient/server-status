@@ -24,11 +24,18 @@ interface ServerInfo {
     };
 }
 
+const formattedVendorNames: { [key: string]: string } = {
+    'AuthenticAMD': 'AMD',
+};
+
 let cachedCpuGpuInfo = {
-    cpu: "Unknown",
+    cpu: {
+        vendor: 'Unknown',
+        brand: 'Unknown',
+        cores: 0
+    },
     gpu: "Unknown",
     hostname: "Unknown",
-    cpuCores: 0,
 };
 
 let cachedData: { serverInfo: ServerInfo | {} } = {
@@ -72,8 +79,9 @@ const formatUptime = (uptimeInSeconds: number): string => {
 const fetchInitialCpuGpuInfo = async () => {
     try {
         const cpu = await si.cpu();
-        cachedCpuGpuInfo.cpu = cpu.brand;
-        cachedCpuGpuInfo.cpuCores = cpu.cores;
+        cachedCpuGpuInfo.cpu.vendor = formattedVendorNames[cpu.vendor] || cpu.vendor;
+        cachedCpuGpuInfo.cpu.brand = cpu.brand;
+        cachedCpuGpuInfo.cpu.cores = cpu.cores;
 
         const gpu = await si.graphics();
         cachedCpuGpuInfo.gpu = gpu.controllers && gpu.controllers.length > 0
@@ -122,10 +130,7 @@ const getServerInfo = async () => {
             hostname: cachedCpuGpuInfo.hostname,
             os: osInfo.distro ?? 'Unknown',
             arch: osInfo.arch ?? 'Unknown',
-            cpu: {
-                model: cachedCpuGpuInfo.cpu,
-                cores: cachedCpuGpuInfo.cpuCores,
-            },
+            cpu: cachedCpuGpuInfo.cpu,
             gpu: cachedCpuGpuInfo.gpu,
             disk: {
                 total: totalDisk,
@@ -141,11 +146,14 @@ const getServerInfo = async () => {
     }
 };
 
-fetchInitialCpuGpuInfo();
+const init = async () => {
+    await fetchInitialCpuGpuInfo();
+    setInterval(async () => {
+        await getServerInfo();
+    }, 10000);
+};
 
-setInterval(async () => {
-    await getServerInfo();
-}, 10000);
+init();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { ignoreCache } = req.query;

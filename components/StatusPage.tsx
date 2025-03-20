@@ -124,12 +124,12 @@ const StatusPage = () => {
             ))}
           </Row>
           <Spacer y={1} />
-          {serverInfo.cpu?.model && serverInfo.cpu?.model !== "Unknown" && serverInfo.cpu?.model !== "N/A" && (
+          {serverInfo.cpu && serverInfo.cpu.brand && serverInfo.cpu.brand !== "N/A" && (
             <>
               <Row css={{ justifyContent: "center", alignItems: "center" }}>
                 <Text b>CPU:</Text>
                 <Badge color="primary" css={{ ml: "$2" }}>
-                  {serverInfo.cpu?.cores || "N/A"}x {serverInfo.cpu?.model || "N/A"}
+                  {serverInfo.cpu.cores || 0}x {serverInfo.cpu.vendor || "N/A"} {serverInfo.cpu.brand || "N/A"}
                 </Badge>
               </Row>
               <Spacer y={1} />
