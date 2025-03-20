@@ -28,14 +28,14 @@ const formattedVendorNames: { [key: string]: string } = {
     'AuthenticAMD': 'AMD',
 };
 
-let cachedCpuGpuInfo = {
+let staticInfo = {
     cpu: {
         vendor: 'Unknown',
         brand: 'Unknown',
         cores: 0
     },
-    gpu: "Unknown",
-    hostname: "Unknown",
+    gpu: 'Unknown',
+    hostname: 'Unknown',
 };
 
 let cachedData: { serverInfo: ServerInfo | {} } = {
@@ -76,23 +76,22 @@ const formatUptime = (uptimeInSeconds: number): string => {
     return result.join(', ');
 };
 
-const fetchInitialCpuGpuInfo = async () => {
+const fetchStaticInfo = async () => {
     try {
         const cpu = await si.cpu();
-        cachedCpuGpuInfo.cpu.vendor = formattedVendorNames[cpu.vendor] || cpu.vendor;
-        cachedCpuGpuInfo.cpu.brand = cpu.brand;
-        cachedCpuGpuInfo.cpu.cores = cpu.cores;
+        staticInfo.cpu.vendor = formattedVendorNames[cpu.vendor] || cpu.vendor;
+        staticInfo.cpu.brand = cpu.brand;
+        staticInfo.cpu.cores = cpu.cores;
 
         const gpu = await si.graphics();
-        cachedCpuGpuInfo.gpu = gpu.controllers && gpu.controllers.length > 0
+        staticInfo.gpu = gpu.controllers && gpu.controllers.length > 0
             ? gpu.controllers.map((g) => g.model).join(', ')
             : 'Unknown';
 
         const osInfo = await si.osInfo();
-        cachedCpuGpuInfo.hostname = osInfo.hostname ?? 'Unknown';
-
+        staticInfo.hostname = osInfo.hostname ?? 'Unknown';
     } catch (error) {
-        console.error('Error fetching CPU/GPU/Hostname info:', error);
+        console.error('Error fetching static info:', error);
     }
 };
 
@@ -127,11 +126,11 @@ const getServerInfo = async () => {
         cachedData.serverInfo = {
             averageLoad,
             uptime: formatUptime(uptime),
-            hostname: cachedCpuGpuInfo.hostname,
+            hostname: staticInfo.hostname,
             os: osInfo.distro ?? 'Unknown',
             arch: osInfo.arch ?? 'Unknown',
-            cpu: cachedCpuGpuInfo.cpu,
-            gpu: cachedCpuGpuInfo.gpu,
+            cpu: staticInfo.cpu,
+            gpu: staticInfo.gpu,
             disk: {
                 total: totalDisk,
                 used: usedDisk,
@@ -147,7 +146,9 @@ const getServerInfo = async () => {
 };
 
 const init = async () => {
-    await fetchInitialCpuGpuInfo();
+    await fetchStaticInfo();
+    await getServerInfo();
+
     setInterval(async () => {
         await getServerInfo();
     }, 10000);
