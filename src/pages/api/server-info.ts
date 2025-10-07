@@ -28,6 +28,31 @@ const formattedVendorNames: { [key: string]: string } = {
     'AuthenticAMD': 'AMD',
 };
 
+const formattedMacVersions: Record<string, string> = {
+    '10.0': 'Cheetah',
+    '10.1': 'Puma',
+    '10.2': 'Jaguar',
+    '10.3': 'Panther',
+    '10.4': 'Tiger',
+    '10.5': 'Leopard',
+    '10.6': 'Snow Leopard',
+    '10.7': 'Lion',
+    '10.8': 'Mountain Lion',
+    '10.9': 'Mavericks',
+    '10.10': 'Yosemite',
+    '10.11': 'El Capitan',
+    '10.12': 'Sierra',
+    '10.13': 'High Sierra',
+    '10.14': 'Mojave',
+    '10.15': 'Catalina',
+    '11': 'Big Sur',
+    '12': 'Monterey',
+    '13': 'Ventura',
+    '14': 'Sonoma',
+    '15': 'Sequoia',
+    '26': 'Tahoe',
+};
+
 let staticInfo = {
     cpu: {
         vendor: 'Unknown',
@@ -103,8 +128,45 @@ const getServerInfo = async () => {
         const time = await si.time();
         const uptime = time.uptime;
 
-        const totalDisk = disk.reduce((total, item) => total + (item.size || 0), 0);
-        const usedDisk = disk.reduce((total, item) => total + (item.used || 0), 0);
+        let realDisks = disk;
+
+        if (osInfo.platform === 'darwin') {
+            const ignoredMounts = [
+                '/',
+                '/System/Volumes/VM',
+                '/System/Volumes/Preboot',
+                '/System/Volumes/Update',
+                '/System/Volumes/xarts',
+                '/System/Volumes/iSCPreboot',
+                '/System/Volumes/Hardware',
+            ];
+
+            realDisks = disk.filter(d =>
+                !ignoredMounts.includes(d.mount) &&
+                d.mount !== '/System/Volumes/Data' &&
+                !d.mount.startsWith('/private/')
+            );
+
+            const dataVolume = disk.find(d => d.mount === '/System/Volumes/Data');
+            if (dataVolume) realDisks.unshift(dataVolume);
+        }
+
+        const totalDisk = realDisks.reduce((total, item) => total + (item.size || 0), 0);
+        const usedDisk = realDisks.reduce((total, item) => total + (item.used || 0), 0);
+
+        const diskDetails = realDisks.map(d => ({
+            mount: d.mount,
+            fs: d.fs,
+            type: d.type,
+            total: d.size,
+            used: d.used,
+            available: d.available,
+            use: d.use
+        })).sort((a, b) => {
+            if (a.mount === '/System/Volumes/Data') return -1;
+            if (b.mount === '/System/Volumes/Data') return 1;
+            return a.mount.localeCompare(b.mount);
+        });
 
         let averageLoad;
         if (osInfo.platform === 'Windows' || osInfo.platform === 'win32') {
@@ -112,28 +174,29 @@ const getServerInfo = async () => {
             averageLoad = { 'now': usage };
         } else {
             const load = os.loadavg();
-            if (load && load.length >= 3) {
-                averageLoad = {
-                    '1m': load[0].toFixed(2),
-                    '5m': load[1].toFixed(2),
-                    '15m': load[2].toFixed(2),
-                };
-            } else {
-                throw new Error('Failed to retrieve load averages.');
-            }
+            averageLoad = {
+                '1m': load[0].toFixed(2),
+                '5m': load[1].toFixed(2),
+                '15m': load[2].toFixed(2),
+            };
         }
+
+        const osName = osInfo.platform === "darwin"
+            ? `macOS ${formattedMacVersions[osInfo.release?.split?.('.')[0] ?? '0'] ?? '0'} ${osInfo.release ?? '0'}`
+            : osInfo.distro ?? 'Unknown';
 
         cachedData.serverInfo = {
             averageLoad,
             uptime: formatUptime(uptime),
             hostname: staticInfo.hostname,
-            os: osInfo.distro ?? 'Unknown',
+            os: osName,
             arch: osInfo.arch ?? 'Unknown',
             cpu: staticInfo.cpu,
             gpu: staticInfo.gpu,
             disk: {
                 total: totalDisk,
                 used: usedDisk,
+                details: diskDetails
             },
             ram: {
                 total: memory.total,

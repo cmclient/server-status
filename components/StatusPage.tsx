@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, Card, Table, Badge, Progress, Spacer, Row, Loading } from "@nextui-org/react";
+import { Text, Card, Table, Badge, Progress, Spacer, Row, Loading, Tooltip } from "@nextui-org/react";
 import { Icon } from '@iconify/react';
 
 const formatSize = (size: number) => {
@@ -170,9 +170,26 @@ const StatusPage = () => {
 
           <Row css={{ justifyContent: "center", alignItems: "center" }}>
             <Text b>Disk Usage:</Text>
-            <Badge color={getColor(diskUsage)} css={{ ml: "$2" }}>
-              {formatSize(serverInfo.disk.used)} / {formatSize(serverInfo.disk.total)}
-            </Badge>
+            <Tooltip
+              content={
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  {serverInfo.disk.details?.map((d: any, idx: number) => {
+                    const usagePercent = ((d.used / d.total) * 100).toFixed(1);
+                    return (
+                      <span key={idx}>
+                        <b>{d.mount}</b>: {formatSize(d.used)} / {formatSize(d.total)} (<b>{usagePercent}%</b>)
+                      </span>
+                    );
+                  })}
+                </div>
+              }
+              color="primary"
+              placement="top"
+            >
+              <Badge color={getColor(diskUsage)} css={{ ml: "$2", cursor: "pointer" }}>
+                {formatSize(serverInfo.disk.used)} / {formatSize(serverInfo.disk.total)}
+              </Badge>
+            </Tooltip>
           </Row>
           <Spacer y={0.5} />
           <Progress color={getColor(diskUsage)} value={diskUsage} css={{ mt: "$2", width: "30%" }} />

@@ -1,3 +1,10 @@
+# Node.js
 node_modules
 next
 .next
+
+# macOS
+.DS_Store
+
+# Scripts
+*.sh
