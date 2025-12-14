@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Text, Card, Table, Progress, Spacer, Row, Loading, Tooltip, Badge } from "@nextui-org/react";
 import { Icon } from '@iconify/react';
 
@@ -31,6 +31,7 @@ const getSignalIcon = (ping: number) => {
 };
 
 const StatusPage = () => {
+  const [servers, setServers] = useState<any[]>([]);
   const [services, setServices] = useState<any[]>([]);
   const [serverInfo, setServerInfo] = useState<any>({});
   const [loading, setLoading] = useState(true);
@@ -39,6 +40,10 @@ const StatusPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const serversResponse = await fetch('/api/servers');
+        const serversData = await serversResponse.json();
+        setServers(serversData);
+
         const servicesResponse = await fetch('/api/services');
         const servicesData = await servicesResponse.json();
         setServices(servicesData);
@@ -69,35 +74,35 @@ const StatusPage = () => {
 
   return (
     <>
-      <Card className="services">
+      <Card className="table-card">
         <Card.Header css={{ justifyContent: "center" }}>
-          <Text h3>Service Status</Text>
+          <Text h3>Server Status</Text>
         </Card.Header>
         <Card.Body>
-          <Table aria-label="Service Status Table" css={{ height: "auto", minWidth: "100%" }}>
+          <Table aria-label="Server Status Table" css={{ height: "auto", minWidth: "100%" }}>
             {/* @ts-ignore */}
             <Table.Header css={{ textAlign: "center" }}>
-              <Table.Column css={{ textAlign: "center", padding: "$4" }}>Service</Table.Column>
+              <Table.Column css={{ textAlign: "center", padding: "$4" }}>Name</Table.Column>
               <Table.Column css={{ textAlign: "center", padding: "$4" }}>Port</Table.Column>
               <Table.Column css={{ textAlign: "center", padding: "$4" }}>Status</Table.Column>
               <Table.Column css={{ textAlign: "center", padding: "$4" }}>Ping</Table.Column>
             </Table.Header>
             <Table.Body>
-              {services.map((service, idx) => (
+              {servers.map((server, idx) => (
                 <Table.Row key={idx} css={{ paddingBottom: "$4", paddingTop: "$4" }}>
-                  <Table.Cell css={{ textAlign: "center", padding: "$4" }}>{service.service}</Table.Cell>
-                  <Table.Cell css={{ textAlign: "center", padding: "$4" }}>{service.port}</Table.Cell>
+                  <Table.Cell css={{ textAlign: "center", padding: "$4" }}>{server.name}</Table.Cell>
+                  <Table.Cell css={{ textAlign: "center", padding: "$4" }}>{server.port}</Table.Cell>
                   <Table.Cell css={{ textAlign: "center", padding: "$4" }}>
-                    <Badge color={service.status === "Online" ? "success" : "error"}>
-                      {service.status}
+                    <Badge color={server.status === "Online" ? "success" : "error"}>
+                      {server.status}
                     </Badge>
                   </Table.Cell>
                   <Table.Cell css={{ textAlign: "center", padding: "$4" }}>
-                    {service.ping === -1 ? (
+                    {server.ping === -1 ? (
                       <Badge color="error">Offline</Badge>
                     ) : (
                       <>
-                        {getSignalIcon(service.ping)} {service.ping}ms
+                        {getSignalIcon(server.ping)} {server.ping}ms
                       </>
                     )}
                   </Table.Cell>
@@ -166,33 +171,7 @@ const StatusPage = () => {
               {serverInfo.os} {serverInfo.arch}
             </Badge>
           </Row>
-          <Spacer y={1} />
 
-          <Row css={{ justifyContent: "center", alignItems: "center" }}>
-            <Text b>Disk Usage:</Text>
-            <Tooltip
-              content={
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  {serverInfo.disk.details?.map((d: any, idx: number) => {
-                    const usagePercent = ((d.used / d.total) * 100).toFixed(1);
-                    return (
-                      <span key={idx}>
-                        <b>{d.mount}</b>: {formatSize(d.used)} / {formatSize(d.total)} (<b>{usagePercent}%</b>)
-                      </span>
-                    );
-                  })}
-                </div>
-              }
-              color="primary"
-              placement="top"
-            >
-              <Badge color={getColor(diskUsage)} css={{ ml: "$2", cursor: "pointer" }}>
-                {formatSize(serverInfo.disk.used)} / {formatSize(serverInfo.disk.total)}
-              </Badge>
-            </Tooltip>
-          </Row>
-          <Spacer y={0.5} />
-          <Progress color={getColor(diskUsage)} value={diskUsage} css={{ mt: "$2", width: "30%" }} />
           <Spacer y={1} />
 
           <Row css={{ justifyContent: "center", alignItems: "center" }}>
@@ -219,9 +198,76 @@ const StatusPage = () => {
               </Badge>
             </Tooltip>
           </Row>
+
           <Spacer y={0.5} />
           <Progress color={getColor(ramUsage)} value={ramUsage} css={{ mt: "$2", width: "30%" }} />
 
+          <Spacer y={1} />
+          <Row css={{ justifyContent: "center", alignItems: "center" }}>
+            <Text b>Disk Usage:</Text>
+            <Tooltip
+              content={
+                <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                  {serverInfo.disk.details?.map((d: any, idx: number) => {
+                    const usagePercent = ((d.used / d.total) * 100).toFixed(1);
+                    return (
+                      <div key={idx} style={{ display: "flex", flexDirection: "column" }}>
+                        <span>
+                          <b>{d.mount}</b>: {formatSize(d.used)} / {formatSize(d.total)} (<b>{usagePercent}%</b>)
+                        </span>
+                        <Progress
+                          value={parseFloat(usagePercent)}
+                          color={getColor(parseFloat(usagePercent))}
+                          size="sm"
+                          css={{ width: "100%" }}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              }
+              color="primary"
+              placement="top"
+            >
+              <Badge color={getColor(diskUsage)} css={{ ml: "$2", cursor: "pointer" }}>
+                {formatSize(serverInfo.disk.used)} / {formatSize(serverInfo.disk.total)}
+              </Badge>
+            </Tooltip>
+
+          </Row>
+          <Spacer y={0.5} />
+          <Progress color={getColor(diskUsage)} value={diskUsage} css={{ mt: "$2", width: "30%" }} />
+
+          <Spacer y={1} />
+          <Row css={{ justifyContent: "center", alignItems: "center", flexWrap: "wrap", gap: "$2" }}>
+            <Text b>Services:</Text>
+            {services.map((svc, idx) => (
+              <Tooltip
+                key={idx}
+                content={
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <span><b>Service:</b> {svc.service}</span>
+                    <span><b>Status:</b> {svc.status}</span>
+                  </div>
+                }
+                color="primary"
+                placement="top"
+              >
+                <Badge
+                  color={
+                    svc.status === "active" || svc.status === "Online"
+                      ? "success"
+                      : svc.status === "inactive" || svc.status === "Offline"
+                        ? "error"
+                        : "warning"
+                  }
+                  css={{ cursor: "pointer" }}
+                >
+                  {svc.name}
+                </Badge>
+              </Tooltip>
+            ))}
+          </Row>
         </Card.Body>
       </Card>
     </>
