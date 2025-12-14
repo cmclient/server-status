@@ -1,0 +1,30 @@
+{
+    "servers": [
+        {
+            "name": "Google",
+            "ip": "8.8.8.8",
+            "port": 53
+        },
+        {
+            "name": "Cloudflare",
+            "ip": "1.1.1.1",
+            "port": 53
+        },
+        {
+            "name": "OpenDNS",
+            "ip": "208.67.222.222",
+            "port": 53
+        },
+        {
+            "name": "OVH Warsaw",
+            "ip": "57.128.213.151",
+            "port": 22
+        }
+    ],
+    "services": [
+        {
+            "name": "OpenSSH Server",
+            "service": "ssh"
+        }
+    ]
+}
