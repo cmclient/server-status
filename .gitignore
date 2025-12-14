@@ -2,9 +2,14 @@
 node_modules
 next
 .next
+package-lock.json
 
 # macOS
 .DS_Store
 
 # Scripts
 *.sh
+
+# App specific
+.env
+.config.json

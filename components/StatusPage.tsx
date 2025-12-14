@@ -65,7 +65,7 @@ const StatusPage = () => {
   if (error) return <Badge enableShadow disableOutline color="error">{error}</Badge>;
 
   const diskUsage = Math.round((serverInfo.disk.used / serverInfo.disk.total) * 100);
-  const ramUsage = Math.round((serverInfo.ram.used / serverInfo.ram.total) * 100);
+  const ramUsage = Math.round((serverInfo.ram.active / serverInfo.ram.total) * 100);
 
   return (
     <>
