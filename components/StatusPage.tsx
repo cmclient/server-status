@@ -178,19 +178,50 @@ const StatusPage = () => {
             <Text b>RAM Usage:</Text>
             <Tooltip
               content={
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <span><b>Total:</b> {formatSize(serverInfo.ram.total)}</span>
-                  <span><b>Used:</b> {formatSize(serverInfo.ram.used)}</span>
-                  <span><b>Free:</b> {formatSize(serverInfo.ram.free)}</span>
-                  <span><b>Active:</b> {formatSize(serverInfo.ram.active)}</span>
-                  <span><b>Available:</b> {formatSize(serverInfo.ram.available)}</span>
-                  <span><b>Cached:</b> {formatSize(serverInfo.ram.cached)}</span>
-                  <span><b>Buffers:</b> {formatSize(serverInfo.ram.buffers)}</span>
-                  <span><b>Swap Used:</b> {formatSize(serverInfo.ram.swapused)}</span>
-                  <span><b>Swap Free:</b> {formatSize(serverInfo.ram.swapfree)}</span>
+                <div style={{ display: "flex", flexDirection: "column", gap: 4, minWidth: 180 }}>
+                  <div style={{ borderBottom: '1px solid #444', paddingBottom: 4, marginBottom: 4 }}>
+                    <strong>RAM</strong>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <span>Total:</span>
+                    <span>{formatSize(serverInfo.ram.total)}</span>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <span>Used:</span>
+                    <span>{formatSize(serverInfo.ram.used)}</span>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <span>Free:</span>
+                    <span>{formatSize(serverInfo.ram.free)}</span>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <span>Active:</span>
+                    <span>{formatSize(serverInfo.ram.active)}</span>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <span>Available:</span>
+                    <span>{formatSize(serverInfo.ram.available)}</span>
+                  </div>
+                  <div style={{ borderTop: '1px solid #444', paddingTop: 4, marginTop: 4 }}>
+                    <strong>Swap</strong>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <span>Used:</span>
+                    <span>{formatSize(serverInfo.ram.swapused)}</span>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <span>Free:</span>
+                    <span>{formatSize(serverInfo.ram.swapfree)}</span>
+                  </div>
                 </div>
               }
-              color="primary"
+              css={{
+                backgroundColor: '#222',
+                color: 'white',
+                borderRadius: 6,
+                padding: '8px 12px',
+                fontSize: '0.85rem',
+              }}
               placement="top"
             >
               <Badge color={getColor(ramUsage)} css={{ ml: "$2", cursor: "pointer" }}>
@@ -226,7 +257,10 @@ const StatusPage = () => {
                   })}
                 </div>
               }
-              color="primary"
+              css={{
+                backgroundColor: '#222',
+                color: 'white',
+              }}
               placement="top"
             >
               <Badge color={getColor(diskUsage)} css={{ ml: "$2", cursor: "pointer" }}>
@@ -250,7 +284,10 @@ const StatusPage = () => {
                     <span><b>Status:</b> {svc.status}</span>
                   </div>
                 }
-                color="primary"
+                css={{
+                  backgroundColor: '#222',
+                  color: 'white',
+                }}
                 placement="top"
               >
                 <Badge
