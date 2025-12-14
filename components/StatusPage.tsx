@@ -197,12 +197,31 @@ const StatusPage = () => {
 
           <Row css={{ justifyContent: "center", alignItems: "center" }}>
             <Text b>RAM Usage:</Text>
-            <Badge color={getColor(ramUsage)} css={{ ml: "$2" }}>
-              {formatSize(serverInfo.ram.used)} / {formatSize(serverInfo.ram.total)}
-            </Badge>
+            <Tooltip
+              content={
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <span><b>Total:</b> {formatSize(serverInfo.ram.total)}</span>
+                  <span><b>Used:</b> {formatSize(serverInfo.ram.used)}</span>
+                  <span><b>Free:</b> {formatSize(serverInfo.ram.free)}</span>
+                  <span><b>Active:</b> {formatSize(serverInfo.ram.active)}</span>
+                  <span><b>Available:</b> {formatSize(serverInfo.ram.available)}</span>
+                  <span><b>Cached:</b> {formatSize(serverInfo.ram.cached)}</span>
+                  <span><b>Buffers:</b> {formatSize(serverInfo.ram.buffers)}</span>
+                  <span><b>Swap Used:</b> {formatSize(serverInfo.ram.swapused)}</span>
+                  <span><b>Swap Free:</b> {formatSize(serverInfo.ram.swapfree)}</span>
+                </div>
+              }
+              color="primary"
+              placement="top"
+            >
+              <Badge color={getColor(ramUsage)} css={{ ml: "$2", cursor: "pointer" }}>
+                {formatSize(serverInfo.ram.active)} / {formatSize(serverInfo.ram.total)}
+              </Badge>
+            </Tooltip>
           </Row>
           <Spacer y={0.5} />
           <Progress color={getColor(ramUsage)} value={ramUsage} css={{ mt: "$2", width: "30%" }} />
+
         </Card.Body>
       </Card>
     </>

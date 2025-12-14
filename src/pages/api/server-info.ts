@@ -198,10 +198,7 @@ const getServerInfo = async () => {
                 used: usedDisk,
                 details: diskDetails
             },
-            ram: {
-                total: memory.total,
-                used: memory.used,
-            },
+            ram: memory
         };
     } catch (error) {
         console.error('Error getting server info:', error);
