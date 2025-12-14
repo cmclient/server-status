@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, Card, Table, Badge, Progress, Spacer, Row, Loading, Tooltip } from "@nextui-org/react";
+import { Text, Card, Table, Progress, Spacer, Row, Loading, Tooltip, Badge } from "@nextui-org/react";
 import { Icon } from '@iconify/react';
 
 const formatSize = (size: number) => {

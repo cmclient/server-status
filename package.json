@@ -23,11 +23,11 @@
     "tsparticles": "^2.12.0"
   },
   "devDependencies": {
-    "@types/node": "25.0.2",
+    "@types/node": "^24.10.4",
     "@types/react": "18.2.79",
     "@types/react-dom": "18.2.25",
-    "eslint": "9.39.2",
-    "eslint-config-next": "16.0.10",
+    "eslint": "^9.39.2",
+    "eslint-config-next": "^16.0.10",
     "typescript": "5.9.3"
   }
 }
