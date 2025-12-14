@@ -12,4 +12,4 @@ package-lock.json
 
 # App specific
 .env
-.config.json
+config.json

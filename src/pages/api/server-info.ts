@@ -183,7 +183,7 @@ const getServerInfo = async () => {
 
         const osName = osInfo.platform === "darwin"
             ? `macOS ${formattedMacVersions[osInfo.release?.split?.('.')[0] ?? '0'] ?? '0'} ${osInfo.release ?? '0'}`
-            : osInfo.distro ?? 'Unknown';
+            : `${osInfo.distro ?? 'Unknown'} ${osInfo.release ?? '0'} ${osInfo.codename ?? ''}`;
 
         cachedData.serverInfo = {
             averageLoad,
